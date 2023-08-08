@@ -24,45 +24,59 @@ selected_page = st.sidebar.selectbox('Select Page:', pages)
 
 # Display different content based on the selected page
 if selected_page == 'Introduction':
-    st.image("Dashboard Image.jpeg", use_column_width=True)
+    st.image("Dashboard Image.jpg", use_column_width=True)
+    st.write("Source: https://www.istockphoto.com/photo/bicycles-for-rent-in-public-park-gm1128037622-297537720")
 
     # Add text to introduce the viewer to the dashboard's purpose
-    st.title('Welcome to Your Dashboard')
+    st.title('Dashboard For CitiBike Trip Data Analysis')
 
 
-    st.subheader('Purpose of the Dashboard')
+
+    st.subheader("Introduction:")
     st.write("""
 
-**Introduction:**
+Welcome to the Citibike Trip Data Analysis Dashboard! This dashboard presents an in-depth analysis of Citibike trip data in New York City and to explore and gain insights into bike usage patterns, popular bike stations, and the relationship between bike trips and temperature.""")
 
-Welcome to the Citibike Trip Data Analysis Dashboard! This dashboard presents an in-depth analysis of Citibike trip data in New York City. Our goal is to explore and gain insights into bike usage patterns, popular bike stations, and the relationship between bike trips and temperature.
-
-**Dual-Axis Line Chart Page:**
-
-On this page, we have a dual-axis line chart that showcases the trends of bike trip counts and temperatures over time. By analyzing this chart, we can understand how temperature variations impact bike usage in the city.
-
-**Most Popular Stations Bar Chart Page:**
-
-Here, we present a bar chart highlighting the top 10 most popular Citibike stations in New York City. This chart provides insights into the stations that witness the highest bike trip volumes, helping us identify areas with high demand.
-
-**Kepler.gl Map Page:**
-
-Explore the interactive Kepler.gl map, which displays the geographic distribution of bike trips across the city. The map visually represents bike movement patterns, helping us uncover hotspot areas and popular routes.
-
-**Solution for Citibike's Supply Problem:**
-
-We have included an additional chart that stands out in finding a solution for Citibike's supply problem. This chart provides crucial metrics and insights to address the supply-demand balance and optimize bike availability.
-
-**Recommendations Page:**
-
-In the final section, we present our recommendations and insights extracted from the overall analysis. Based on the data-driven findings, we propose strategies to improve bike availability, expand stations, and enhance the user experience.
-
-**How to Use the Dashboard:**
+    st.subheader("How to Use the Dashboard:")
+    st.write("""
 
 To navigate through the dashboard, simply use the sidebar on the left to select the page of interest. Each page contains visualizations and analyses related to its specific topic. Feel free to interact with the charts and map for a more detailed exploration of the data.""")
 
+    st.subheader("Dual-Axis Line Chart Page:")
+    st.write("""
+
+On this page, we have a dual-axis line chart that showcases the trends of bike trip counts and temperatures over time. By analyzing this chart, we can understand how temperature variations impact bike usage in the city.""")
+
+    st.subheader("Most Popular Stations Bar Chart Page:")
+    st.write("""
+
+Here, we present a bar chart highlighting the top 10 most popular Citibike stations in New York City. This chart provides insights into the stations that witness the highest bike trip volumes, helping us identify areas with high demand.""")
+
+    st.subheader("Kepler.gl Map Page:")
+    st.write("""
+
+Explore the interactive Kepler.gl map, which displays the geographic distribution of bike trips across the city. The map visually represents bike movement patterns, helping us uncover hotspot areas and popular routes.""")
+
+
+
+    st.subheader("Recommendations Page:")
+    st.write("""
+
+In the final section, we present our recommendations and insights extracted from the overall analysis. Based on the data-driven findings, we propose strategies to improve bike availability, expand stations, and enhance the user experience.
+
+""")
+
+    st.subheader('Assumptions')
+    st.write("""A random seed comprising 32 records and constituting 0.01% of the primary dataframe has been selected. This decision was made to ensure that the subset data employed for the analysis remains within the confines of 25 MB.
+
+The primary dataset is of considerable magnitude, involving the amalgamation of Citibike trip data for the year 2022 with weather-related information. This confluence has resulted in a dataset encompassing 30,689,921 records and 34 variables, thereby amounting to a data size of approximately 9 to 10 gigabytes. Consequently, the act of loading the entire dataset in one instance necessitates a memory allocation of 7 gigabytes, and during subsequent data manipulations, this usage can peak at 32 gigabytes.
+
+In the context of visualizing the data through the utilization of the kepler.gl mapping framework, a methodical approach has been adopted. Specifically, a representative subset of the dataset, comprising 10,000 records randomly selected from each month, has been chosen. This equates to a cumulative selection of 120,000 records, forming the foundation for the ensuing analysis and visualization endeavors conducted within the kepler.gl mapping framework.""")
+
     st.subheader('Data Source')
-    st.write('The bike trip data is sourced from the Citi Bike sharing system, and temperature data is sourced from the National Weather Service. The data has been combined and preprocessed for analysis.')
+    st.write('The bike trip data is sourced from the Citi Bike sharing system, and temperature data is sourced from the National Weather Service.')
+    text_new="""Citi Bike Data Source: https://s3.amazonaws.com/tripdata/index.html <br>Weather Data Source: https://www.ncdc.noaa.gov/cdo-web/datasets"""
+    st.write(text_new, unsafe_allow_html=True)
 
     st.subheader('Instructions')
     st.write('Please use the sidebar to navigate between different sections of the dashboard. You can select specific pages to view various visualizations and insights.')
@@ -88,40 +102,75 @@ elif selected_page == 'Dual Axis Line Chart':
     merged_df['temperatures_F'] = (merged_df['TAVG'] * 9/5) + 32
     #st.write(merged_df)
 
-    # Step 4: Create the dual-axis line chart
-    fig, ax1 = plt.subplots(figsize=(10, 6))
+    st.subheader("Dual axis Line Chart for Bike Trip and Temp")
 
-    # Plot bike trip counts on the first axis (left)
+    # Create the first plot for bike trip counts
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
     sns.lineplot(x='DATE', y='trip_count', data=merged_df, ax=ax1, color='b')
-    ax1.set_ylabel('Bike_trip_count', color='b')
+    ax1.set_ylabel('Bike Trip Count', color='b')
     ax1.tick_params(axis='y', labelcolor='b')
 
-    # Create a second axis (right) for temperature
-    ax2 = ax1.twinx()
+    plt.title('Bike Trip Counts')
+    plt.xlabel('Date')
+
+    st.subheader('Plot 1: Bike Trip Count')
+    st.write("""
+
+The initial visual representation, depicted in Figure 1, delves into the temporal evolution of bike trip counts over the observed period. Employing a line plot, the analysis reveals the fluctuation in bike trip counts in relation to dates. This visualization provides a fundamental insight into the usage patterns of the bike-sharing system, offering an immediate grasp of how trip counts have evolved.""")
+
+    # Show the plot
+    st.pyplot(fig1)
+
+    # Create the second plot for temperature
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
     sns.lineplot(x='DATE', y='temperatures_F', data=merged_df, ax=ax2, color='r')
     ax2.set_ylabel('Temperature (Fahrenheit)', color='r')
     ax2.tick_params(axis='y', labelcolor='r')
 
+    plt.title('Temperature')
+    plt.xlabel('Date')
 
+    # Show the plot
+    st.pyplot(fig2)
+
+    st.subheader('Plot 2: Temperature')
+    st.write("""
+
+In Figure 2, the illustration centers on the variations in temperature, measured in Fahrenheit, throughout the same period of observation. This plot employs a line chart to graphically depict the shifts in temperature over time. This depiction of temperature trends serves as a contextual backdrop, potentially aiding in the interpretation of trends observed in other aspects of the analysis.""")
+
+    # Create the dual-axis line chart
+    fig3, ax3 = plt.subplots(figsize=(10, 6))
+
+    # Plot bike trip counts on the first axis (left)
+    sns.lineplot(x='DATE', y='trip_count', data=merged_df, ax=ax3, color='b')
+    ax3.set_ylabel('Bike Trip Count', color='b')
+    ax3.tick_params(axis='y', labelcolor='b')
+
+    # Create a second axis (right) for temperature
+    ax4 = ax3.twinx()
+    sns.lineplot(x='DATE', y='temperatures_F', data=merged_df, ax=ax4, color='r')
+    ax4.set_ylabel('Temperature (Fahrenheit)', color='r')
+    ax4.tick_params(axis='y', labelcolor='r')
 
     # Customize the chart
-    plt.title('trip_count and Temperatures')
+    plt.title('Bike Trip Count and Temperatures')
     plt.xlabel('Date')
-    plt.legend(labels=['Bike_trip_count', 'Temperature'], loc='upper left')
+    plt.legend(labels=['Bike Trip Count', 'Temperature'], loc='upper left')
 
     # Show the plot
     plt.tight_layout()
-    st.pyplot(fig)
-    # You can add different content specific to Dual Axis Line Chart here
-    st.subheader("Dual axis Line Chart for Bike Trip and Temp")
+    st.pyplot(fig3)
 
-    markdown_text=''' Using this sample, we counted the number of bike trips on a daily basis and plotted it in plot 1. Next, we gathered temperature data per day and created plot 2 to visualize the temperature trends.
+    st.subheader('Plot 3: Dual-Axis Line Chart')
+    st.write("""
 
-Upon merging both plots, we presented a dual-axis line chart to compare bike trips and temperatures and observed that the line chart of bike trip counts over time shows that there is a consistent pattern in the number of bike trips. There are fluctuations in the daily bike trip counts, but overall, the number of bike trips remains relatively stable.
+The culmination of this visualization exercise is realized through the dual-axis line chart showcased in Figure 3. This sophisticated chart amalgamates the previous two visualizations, affording the viewer a holistic view of the interplay between bike trip counts and ambient temperatures. On the left axis, the line plot denotes the progression of bike trip counts, while on the right axis, the temperature trends are elegantly presented. This coalescence of data enables a comprehensive understanding of how temperature dynamics intertwine with bike trip patterns.""")
 
-The line chart of temperature variation over time indicates that there are seasonal changes in temperature. The temperature tends to be higher during the summer months and lower during the winter months.
+    markdown_text='''The chart depicting bike trip counts over a temporal continuum reveals a discernible and recurring pattern in the frequency of bike trips. Within this pattern, variations in daily bike trip counts are observable; however, there exists an overarching trend of consistency in the total number of bike trips.
 
-The consistent bike trip counts despite temperature variations could suggest that bike-sharing is popular year-round in the region, regardless of weather conditions. This finding might indicate that bike-sharing infrastructure is well-utilized and could potentially support tourism and recreational activities in the area.'''
+Notably, distinct drops and spikes are discernible at specific junctures, notably during the 5th, 9th, and 10th months of the year. This recurrent occurrence aligns with the seasonality inherent to New York's climate.
+
+The graphical representation offers insights into intermittent elevations in bike trip counts, which plausibly correspond to instances of heightened demand. These peaks in bike usage are aptly associated with temporal junctures characterized by escalated demand, such as weekends, holidays, and targeted events.'''
     st.markdown(markdown_text)
 
 elif selected_page == 'Most Popular Station':
@@ -131,12 +180,14 @@ elif selected_page == 'Most Popular Station':
 
     top_10_stations = station_counts_sorted.head(10)
 
+    st.subheader("Most Popular station")
+
     fig = px.bar(
         top_10_stations,
         x='Trip Count',
         y='start_station_name',
         orientation='h',
-        title='Top 10 Most Popular Citi Bike Stations in New York',
+        #title='Top 10 Most Popular Citi Bike Stations in New York',
         labels={'start_station_name': 'Station', 'Trip Count': 'Number of Trips'},
         text='Trip Count',  # Data labels: Display trip counts on the bars
     )
@@ -156,20 +207,37 @@ elif selected_page == 'Most Popular Station':
     st.plotly_chart(fig)
     # You can add different content specific to Most Popular Station here
 
-    st.subheader("Most Popular station")
 
-    markdown_text=''' In this analysis, our approach involved counting the number of bike trips between the starting and ending stations. Based on this information, we identified the top 10 most popular stations and presented them using a bar plot. This bar plot visually represents the popularity of these stations, making it easier to understand which stations are frequented the most.'''
+
+    markdown_text=''' The analysis utilizes a random seed to select a subset of 32 records from the primary dataset. This selection was made based on a percentage criterion of 0.01%, a decision prompted by the data's overall size remaining below the 25 MB threshold.
+
+To commence the analysis, the number of bike trip counts was initially computed, considering the origin station as the primary criterion. Subsequently, a filtering process was applied to identify the ten most frequented stations. This filtering was executed based on descending trip count values, resulting in the prioritization of stations with higher trip counts. The insights derived from this process were visualized through a bar chart representation.'''
     st.markdown(markdown_text)
 
 elif selected_page == 'Kepler.gl Map':
+
+    st.subheader("Kepler.gl Map for station and arc connecting them")
     html_file = open("custom_map.html", 'r', encoding='utf-8').read()
 
     # Render the .html file using st.components.v1.html
     st.components.v1.html(html_file, height=500)
 
-    st.subheader("Kepler.gl Map for station and arc connecting them")
+    #st.subheader("Kepler.gl Map for station and arc connecting them")
 
-    markdown_text=''' In this analysis we have taken the trips on the basis of starting and the ending station with an arc connecting them with the help of kepler.gl map where if we want you can customize the maps , find the arc between the most common stations. changing of colour options is also available. '''
+    markdown_text='''
+The analysis pertains to the utilization of an identical dataframe comprising 32 randomly selected seed records. Notably, the data volume adheres to a constraint of less than 25 MB, ensuring data manageability.
+
+The methodology employed involves the utilization of latitude and longitude coordinates of both the starting and ending stations. This information is employed to generate a kepler.gl map, enriched with connecting arcs. Each arc on the map symbolizes an individual trip, thereby providing a visual representation of the journey between the specified stations. Furthermore, the map is interactive, enabling users to hover over arcs to acquire pertinent details, including the time of commencement, station names, and conclusion time.
+
+The customization of the visualization extends beyond the default settings. Color options, for instance, can be tailored to align with user preferences. The coloration of arcs connecting stations can be adjusted for clarity and enhanced interpretability.
+
+Considering the extensive data volume and potential graph complexity, facilitating informed insights demands a strategic approach. To address this, a filtering mechanism is positioned on the left-hand side of the map. Users have the liberty to filter results based on desired starting and ending stations. Additionally, this mechanism assists in pinpointing the most frequently used stations by visualizing connecting arcs between them.
+
+
+
+
+
+ '''
     st.markdown(markdown_text)
 
 
@@ -177,7 +245,7 @@ elif selected_page == 'Kepler.gl Map':
 elif selected_page == 'Misc':
 
     rider_counts = data['rideable_type'].value_counts()
-
+    st.subheader("Pie chart for Rider Type")
     # Create a pie chart using Plotly
     fig = go.Figure(data=[go.Pie(labels=rider_counts.index, values=rider_counts.values)])
 
@@ -187,38 +255,49 @@ elif selected_page == 'Misc':
     # Show the chart using Streamlit
     st.plotly_chart(fig)
 
-    st.subheader("Pie chart for Rider Type")
 
-    markdown_text=''' This is an simple pie chart which we have tried to plot on Rider type category from the citi Bike trip data  and we finds that the  classic bike is compared to electric bike and docked bike as the percentage is 73.3.8% for the classic bike,25.9% for the electric bike and 0.85% for docked bike
 
-we can also concludes from the above chart the preferences of customers for taking a ride in classic bike is more.'''
+    markdown_text=''' The insights drawn from the aforementioned chart suggest a discernible preference among customers for opting for the classic bike type for their rides.
+
+The preponderance of classic bikes, constituting 73.38% of the total rider types, indicates a pronounced preference among users for this bike category. This could be attributed to factors such as familiarity, comfort, and ease of use associated with classic bikes.
+
+The representation of electric bikes at 25.9% signifies a notable presence and growing adoption of this eco-friendly option. This suggests an increasing awareness and interest in sustainable transportation alternatives among riders.
+
+Recognizing the popularity of classic and electric bikes, the service provider could consider optimizing the availability and maintenance of these bikes to meet user demand effectively.
+
+The insights from this analysis could guide the allocation of resources towards the most favored bike categories, influencing infrastructure planning and resource allocation for bike stations and charging facilities.'''
     st.markdown(markdown_text)
 
-
+    st.subheader("Kepler.gl Map for 10 most popular station and arc connecting them")
     html_file = open("commontripmap.html", 'r', encoding='utf-8').read()
 
     # Render the .html file using st.components.v1.html
     st.components.v1.html(html_file, height=500)
-    st.subheader("Kepler.gl Map for 10 most popular station and arc connecting them")
 
-    markdown_text=''' We have taken the top 10 most popular station on the basis of trip count and with the help of kepler.gl map and tries to use an arc which connects them'''
+
+    markdown_text=''' Presented herewith is the kepler.gl map meticulously crafted to illustrate the ten most frequented stations within the specified context. Notably, the map is complemented by an array of filtering functionalities thoughtfully positioned on the left-hand segment. Noteworthy is the prominent visual representation featured within this map, depicting interconnected arcs that establish connections based on the originating and culminating stations. Further enhancing the user experience, hovering over specific points on the map provides insightful details such as trip commencement information, originating station, and final destination station.'''
     st.markdown(markdown_text)
 
 
 elif selected_page == 'Recommendations, Insights':
-    markdown_text=''' We can mention some of the insights by performing analsysis on citi bike trip data  and Weather data from New york.
+    st.subheader("Recommendations, Insights")
+    markdown_text=''' Several insights can be highlighted through the analysis conducted on the Citibike trip data in conjunction with New York's weather data.
 
-1.  We identified the top 10 most popular stations, which are consistently attracting a high number of bike trips. These stations can be considered prime locations for bike-sharing services and may require more attention in terms of bike availability and maintenance.
+1.  The research team has successfully identified the ten prominent stations that consistently attract a significant volume of bike trips. These stations inherently possess the potential to become focal points for bike-sharing services, necessitating increased attention toward bike availability and maintenance endeavors. The comprehensive execution of this analysis mandates the incorporation of maintenance data, which plays a pivotal role in facilitating an extensive evaluation. This dataset will serve as a crucial resource, enabling a thorough assessment and, subsequently, the formulation of data-driven solutions.
 
-2. Line chart of bike trip counts over time shows that there is a consistent pattern in the number of bike trips. There are fluctuations in the daily bike trip counts, but overall, the number of bike trips remains relatively stable.
+2. The line chart depicting bike trip counts over time reveals a consistent pattern in the frequency of bike trips. Noteworthy is the presence of fluctuations in daily trip counts; however, the overarching trend indicates a stable volume of bike trips.
 
-3. The line chart of temperature variation over time indicates that there are seasonal changes in temperature. The temperature tends to be higher during the summer months and lower during the winter months.
+3. The temperature variation line chart underscores distinct seasonal temperature fluctuations over time, with higher temperatures during summer and lower temperatures during winter months.
 
-4. We observed that bike trip counts vary across different months. There seems to be a seasonal pattern, with higher bike usage during certain months, which could be influenced by factors such as weather, tourist influx, or local events.
+4. Concurrently, the bike trip count chart indicates variations in trip counts across different months, with notable drops during the 5th, 9th, and 10th months.
 
-5. The analysis can help understand user preferences and behaviors, guiding marketing strategies and service improvements to cater to customer needs where we have seen that the choice of rider type for classic bike is more as compared to electric and docked bike so we can take this under preferences and try to improve the availablity of classic bike based on their demand.
+5. Plausible factors contributing to this decline include seasonal variations, local events such as road closures and ongoing construction, shifts in the academic calendar, and the influence of public holidays.
 
-6. We have seen from the number of bike trip the most popular stations that we have found states that these stations such as Central Avenue Road, Avenue Road etc which comes under the manhattan zone of new york and then we came to know that the most tourits places and recreational centres are mostly in these zone as comapred to other zones so the data offer insights into how tourism affects bike usage in specific areas.'''
+6. Determining the precise cause of the reduced bike trip counts necessitates a comprehensive analysis involving historical data, correlation with local events, consideration of prevailing weather conditions, and a comprehensive assessment of contextual factors.
+
+7. This analysis provides valuable insights into user preferences and behaviors, thereby informing strategic marketing initiatives and service enhancements that align with customer requirements. Notably, the analysis reveals a pronounced inclination towards the classic bike rider type, in contrast to the relatively lower preference for electric and docked bike options. This observation underscores the significance of user preferences and sets the groundwork for optimizing the availability of classic bikes to address the evident demand among riders.
+
+8. The examination of the bike trip count data has unveiled a list of highly frequented stations, notably including locations such as Central Avenue Road and Avenue Road. Notably, these stations are situated within the Manhattan zone of New York. This finding has led to the realization that the Manhattan zone harbors a concentration of popular tourist destinations and recreational hubs when contrasted with other zones. This dataset's revelations offer valuable insights into the intricate interplay between tourism dynamics and bike utilization within specific geographical areas.'''
 
     st.markdown(markdown_text)
 
